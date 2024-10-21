@@ -10,4 +10,17 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     Returns:
         List[Feature]: List of features with their types.
     """
-    raise NotImplementedError("This should be implemented by you.")
+    features = []
+    dataframe = dataset.read()
+    column_values = dataframe.dtypes
+
+    for name in column_values.index:
+        type = column_values[name]
+        if type == object:
+            type = "categorical"
+        else:
+            type = "numerical"
+        features.append(Feature(name = name, type = type))
+
+    return features
+

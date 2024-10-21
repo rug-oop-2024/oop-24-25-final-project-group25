@@ -10,7 +10,7 @@ from autoop.functional.preprocessing import preprocess_features
 import numpy as np
 
 
-class Pipeline():
+class Pipeline:
     
     def __init__(self, 
                  metrics: List[Metric],
@@ -100,25 +100,27 @@ Pipeline(
         Y = self._train_y
         self._model.fit(X, Y)
 
-    def _evaluate(self):
-        X = self._compact_vectors(self._test_X)
-        Y = self._test_y
-        self._metrics_results = []
+    def _evaluate(self, X, Y):
+        #  Modified to it can evaluate both training and testing datasets
         predictions = self._model.predict(X)
+        metrics_results = []
         for metric in self._metrics:
             result = metric.evaluate(predictions, Y)
-            self._metrics_results.append((metric, result))
-        self._predictions = predictions
+            metrics_results.append((metric, result))
+        return predictions, metrics_results
 
     def execute(self):
+        # I added evaluation steps for both the training and testing datasets. It returns them in a output directory
         self._preprocess_features()
         self._split_data()
         self._train()
-        self._evaluate()
-        return {
-            "metrics": self._metrics_results,
-            "predictions": self._predictions,
-        }
-        
 
-    
+        train_predictions, train_metrics = self._evaluate(self._compact_vectors(self._train_X), self._train_y)
+        test_predictions, test_metrics = self._evaluate(self._compact_vectors(self._test_X), self._test_y)
+
+        return {
+            "train_metrics": train_metrics,
+            "train_predictions": train_predictions,
+            "test_metrics": test_metrics,
+            "test_predictions": test_predictions,
+        }
