@@ -10,7 +10,7 @@ from autoop.functional.preprocessing import preprocess_features
 import numpy as np
 
 
-class Pipeline():
+class Pipeline:
     
     def __init__(self, 
                  metrics: List[Metric],
@@ -29,7 +29,7 @@ class Pipeline():
         self._split = split
         if target_feature.type == "categorical" and model.type != "classification":
             raise ValueError("Model type must be classification for categorical target feature")
-        if target_feature.type == "continuous" and model.type != "regression":
+        if target_feature.type == "numerical" and model.type != "regression":
             raise ValueError("Model type must be regression for continuous target feature")
 
     def __str__(self):
@@ -100,25 +100,29 @@ Pipeline(
         Y = self._train_y
         self._model.fit(X, Y)
 
+    #old one was: def _evaluate(self, X, Y)
     def _evaluate(self):
-        X = self._compact_vectors(self._test_X)
-        Y = self._test_y
+        #  Modified to it can evaluate both training and testing datasets
+        # predictions = self._model.predict(X)
+        self._predictions = self._model.predict(self._compact_vectors(self._test_X))
         self._metrics_results = []
-        predictions = self._model.predict(X)
         for metric in self._metrics:
-            result = metric.evaluate(predictions, Y)
+            result = metric.evaluate(self._predictions, self._test_y)
             self._metrics_results.append((metric, result))
-        self._predictions = predictions
+        return self._predictions, self._metrics_results
 
     def execute(self):
+        # I added evaluation steps for both the training and testing datasets. It returns them in a output directory
         self._preprocess_features()
         self._split_data()
         self._train()
-        self._evaluate()
-        return {
-            "metrics": self._metrics_results,
-            "predictions": self._predictions,
-        }
-        
 
-    
+        train_predictions, train_metrics = self._evaluate(self._compact_vectors(self._train_X), self._train_y)
+        test_predictions, test_metrics = self._evaluate(self._compact_vectors(self._test_X), self._test_y)
+
+        return {
+            "train_metrics": train_metrics,
+            "train_predictions": train_predictions,
+            "test_metrics": test_metrics,
+            "test_predictions": test_predictions,
+        }
