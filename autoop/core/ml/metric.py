@@ -17,9 +17,9 @@ class Metric(ABC):
     """
     # your code here
     # remember: metrics take ground truth and prediction as input and return a real number
-    @abstractmethod
     @staticmethod
-    def evaluate(predictions: list, actual: list) -> float:
+    @abstractmethod
+    def evaluate(self, predictions: list, actual: list) -> float:
         """
         Evaluate the predictions based on the given ground truth.
 
@@ -37,7 +37,7 @@ class Metric(ABC):
 
 # add here concrete implementations of the Metric class
 
-class MetricMeanSquaredError(Metric):
+class MeanSquaredError(Metric):
     """
     Class representing the mean-squared-error metric.
     """
@@ -61,7 +61,7 @@ class MetricMeanSquaredError(Metric):
 
         return sum/n
 
-class MetricAccuracy(Metric):
+class Accuracy(Metric):
     """
     Class representing the accuracy metric.
     """
@@ -76,7 +76,7 @@ class MetricAccuracy(Metric):
         return sum/n
 
 
-class MetricPrecisionMacro(Metric):
+class PrecisionMacro(Metric):
     """
     Class representing the macro precision metric.
     """
@@ -98,7 +98,7 @@ class MetricPrecisionMacro(Metric):
 
         return macro_sum/len(categories)
 
-class MetricRecallMacro(Metric):
+class RecallMacro(Metric):
     """
     Class representing the macro recall metric.
     """
@@ -123,7 +123,7 @@ class MetricRecallMacro(Metric):
 
         return macro_sum/len(categories)
 
-class MetricMeanAbsoluteError(Metric):
+class MeanAbsoluteError(Metric):
     """
     Class representing the mean metric.
     """
@@ -149,7 +149,7 @@ class MetricMeanAbsoluteError(Metric):
         return sum/n
 
 
-class MetricRSquared(Metric):
+class RSquared(Metric):
     """
     Class representing the R-squared error.
     """
@@ -173,16 +173,16 @@ def get_metric(name: str) -> Metric:
     # Return a metric instance given its str name.
     match name:
         case "mean_squared_error":
-            return MetricMeanSquaredError()
+            return MeanSquaredError()
         case "accuracy":
-            return MetricAccuracy()
+            return Accuracy()
         case "precision_macro":
-            return MetricPrecisionMacro()
+            return PrecisionMacro()
         case "recall_macro":
-            return MetricRecallMacro()
+            return RecallMacro()
         case "r_squared":
-            return MetricRSquared()
+            return RSquared()
         case "mean_absolute_error":
-            return MetricMeanAbsoluteError()
+            return MeanAbsoluteError()
         case _:
             raise KeyError("NO SUCH METRIC FOUND")

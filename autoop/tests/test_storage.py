@@ -45,6 +45,8 @@ class TestStorage(unittest.TestCase):
         for key in random_keys:
             self.storage.save(test_bytes, key)
         keys = self.storage.list("test")
-        keys = ["/".join(key.split("/")[-2:]) for key in keys]
+        keys = ["/".join(key.split("\\")[-2:]) for key in keys]
+        print("\n#######################",set(keys))
+        print("\n#######################",set(random_keys))
         self.assertEqual(set(keys), set(random_keys))
             

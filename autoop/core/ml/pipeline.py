@@ -29,7 +29,7 @@ class Pipeline:
         self._split = split
         if target_feature.type == "categorical" and model.type != "classification":
             raise ValueError("Model type must be classification for categorical target feature")
-        if target_feature.type == "continuous" and model.type != "regression":
+        if target_feature.type == "numerical" and model.type != "regression":
             raise ValueError("Model type must be regression for continuous target feature")
 
     def __str__(self):
@@ -100,14 +100,16 @@ Pipeline(
         Y = self._train_y
         self._model.fit(X, Y)
 
-    def _evaluate(self, X, Y):
+    #old one was: def _evaluate(self, X, Y)
+    def _evaluate(self):
         #  Modified to it can evaluate both training and testing datasets
-        predictions = self._model.predict(X)
-        metrics_results = []
+        # predictions = self._model.predict(X)
+        self._predictions = self._model.predict(self._compact_vectors(self._test_X))
+        self._metrics_results = []
         for metric in self._metrics:
-            result = metric.evaluate(predictions, Y)
-            metrics_results.append((metric, result))
-        return predictions, metrics_results
+            result = metric.evaluate(self._predictions, self._test_y)
+            self._metrics_results.append((metric, result))
+        return self._predictions, self._metrics_results
 
     def execute(self):
         # I added evaluation steps for both the training and testing datasets. It returns them in a output directory

@@ -1,23 +1,27 @@
 from sklearn.tree import DecisionTreeClassifier as SklearnDecisionTreeClassifier
 
 class DecisionTreeClassifierModel:
+
+    _type: str = "classification"
+
     def __init__(self, **kwargs):
-        self.model = SklearnDecisionTreeClassifier(**kwargs)
-        self.parameters = {}
+        self._model = SklearnDecisionTreeClassifier(**kwargs)
+        self._parameters = {}
 
     def fit(self, X, y):
         """Fits the decision tree classifier model to the data."""
-        self.model.fit(X, y)
-        self.parameters = {
-            'max_depth': self.model.get_depth(),
-            'min_samples_split': self.model.min_samples_split
+        self._model.fit(X, y)
+        self._parameters = {
+            'max_depth': self._model.get_depth(),
+            'min_samples_split': self._model.min_samples_split
         }
 
     def predict(self, X):
         """Makes predictions using the fitted model."""
-        return self.model.predict(X)
+        return self._model.predict(X)
 
-    def get_params(self):
+    @property
+    def parameters(self):
         """Returns the model parameters."""
-        return self.parameters
+        return self._parameters
 

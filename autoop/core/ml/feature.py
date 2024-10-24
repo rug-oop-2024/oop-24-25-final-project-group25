@@ -18,4 +18,4 @@ class Feature(BaseModel):
     type: str = Field()
 
     def __str__(self):
-        raise NotImplementedError("To be implemented.")
+        return f"Name: {self.name} of type: {self.type}"
