@@ -126,3 +126,13 @@ Pipeline(
             "test_metrics": test_metrics,
             "test_predictions": test_predictions,
         }
+
+    def __str__(self):
+        print(
+        f"""
+Chosen dataset: {self._dataset.name}
+Chosen model: {23}
+Chosen input features: {23}
+
+        """
+        )

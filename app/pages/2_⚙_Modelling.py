@@ -36,27 +36,34 @@ if not dataset is None:
 
     target_feature = st.selectbox(label="select target feature", options=features, index=None)
 
-    if target_feature and input_features and not target_feature in features:
+    if not target_feature is None and not input_features is None and not target_feature in input_features:
 
         target_type = target_feature.type
+        st.write(f"Detected task type: {target_type} ")
 
-        metric_names = st.multiselect(label="Select the desired metric", options=METRICS)
+        if target_type == "numerical":
+            models_list = REGRESSION_MODELS
+        elif target_type == "categorical":
+            models_list = CLASSIFICATION_MODELS
 
-        metrics = [get_metric(metric_name) for metric_name in metric_names]
+        model_name = st.selectbox(label="Select desired model", options=models_list, index=None)
+        if not model_name is None:
+            model = get_model(model_name)
 
-        if any([metric.type != target_type for metric in metrics]):
-            st.write("types do not match")
-        else:
-            if target_type == "numerical":
-                models_list = REGRESSION_MODELS
-            elif target_type == "categorical":
-                models_list = CLASSIFICATION_MODELS
+            split = st.number_input(label="Choose the desired split percentage", min_value=0, max_value=100, step=10, value=80)
 
-            model_name = st.selectbox(label="Select desired model", options=models_list, index=None)
-            if not model_name is None:
-                model = get_model(model_name)
+            if split is not None:
 
-                pipeline = Pipeline()
+                metric_names = st.multiselect(label="Select compatible desired metrics", options=METRICS)
+
+                metrics = [get_metric(metric_name) for metric_name in metric_names]
+
+                if any([metric.type != target_type for metric in metrics]):
+                    st.write("types do not match")
+                else:
+                    if st.button(label="Create pipeline"):
+                        st.write("Pipeline created!")
+                        pipeline = Pipeline(metrics, dataset, model, input_features, target_feature, split/100)
 
 
 
