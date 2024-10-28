@@ -16,7 +16,7 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
 
     for name in column_values.index:
         type = column_values[name]
-        if type == object:
+        if type in [object, str]:
             type = "categorical"
         else:
             type = "numerical"

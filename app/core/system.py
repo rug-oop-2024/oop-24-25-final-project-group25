@@ -24,6 +24,7 @@ class ArtifactRegistry():
             "tags": artifact.tags,
             "metadata": artifact.metadata,
             "type": artifact.type,
+            "id": artifact.id
         }
         self._database.set(f"artifacts", artifact.id, entry)
     
@@ -41,6 +42,7 @@ class ArtifactRegistry():
                 metadata=data["metadata"],
                 data=self._storage.load(data["asset_path"]),
                 type=data["type"],
+                id=data["id"]
             )
             artifacts.append(artifact)
         return artifacts
@@ -55,6 +57,7 @@ class ArtifactRegistry():
             metadata=data["metadata"],
             data=self._storage.load(data["asset_path"]),
             type=data["type"],
+            id=data["id"]
         )
     
     def delete(self, artifact_id: str):
