@@ -15,7 +15,6 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     dataframe = dataset.read()
 
     numericals = dataframe.select_dtypes(include=np.number)
-    print(numericals)
     numericals_names = numericals.columns
 
     for name in numericals_names:

@@ -14,6 +14,7 @@ class Ridge(Model):
     """
 
     _type: str = "regression"
+    _name: str = "ridge regression"
 
     def __init__(self):
         self._ridge: linear_model.Ridge = linear_model.Ridge()

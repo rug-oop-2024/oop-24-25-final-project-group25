@@ -18,6 +18,11 @@ class Metric(ABC):
     # your code here
     # remember: metrics take ground truth and prediction as input and return a real number
     _type: str
+    _name: str
+
+    @property
+    def name(self)->str:
+        return self._name
 
     @property
     def type(self)->str:
@@ -55,6 +60,7 @@ class MeanSquaredError(Metric):
     Class representing the mean-squared-error metric.
     """
     _type:str = "numerical"
+    name:str = "mean_squared_error"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray) -> float:
@@ -82,6 +88,7 @@ class Accuracy(Metric):
     """
 
     _type:str = "categorical"
+    name: str = "accuracy"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray):
@@ -100,6 +107,7 @@ class PrecisionMacro(Metric):
     """
 
     _type:str = "categorical"
+    name:str = "precision_macro"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray):
@@ -125,6 +133,7 @@ class RecallMacro(Metric):
     """
 
     _type:str = "categorical"
+    name:str = "recall_macro"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray):
@@ -153,6 +162,7 @@ class MeanAbsoluteError(Metric):
     """
 
     _type:str = "numerical"
+    name:str = "mean_absolute_error"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray) -> float:
@@ -181,6 +191,7 @@ class RSquared(Metric):
     """
 
     _type:str = "numerical"
+    name:str = "r_squared"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray) -> float:

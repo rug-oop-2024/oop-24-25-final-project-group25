@@ -3,10 +3,13 @@ import pickle
 
 from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.dataset import Dataset
-from autoop.core.ml.model import Model
+from autoop.core.ml.model import Model, get_model
 from autoop.core.ml.feature import Feature
-from autoop.core.ml.metric import Metric
+from autoop.core.ml.metric import Metric, get_metric
+from app.core.system import ArtifactRegistry
 from autoop.functional.preprocessing import preprocess_features
+import pickle
+import pandas as pd
 import numpy as np
 
 
@@ -101,38 +104,77 @@ Pipeline(
         self._model.fit(X, Y)
 
     #old one was: def _evaluate(self, X, Y)
-    def _evaluate(self):
+    def _evaluate(self, X, Y):
         #  Modified to it can evaluate both training and testing datasets
         # predictions = self._model.predict(X)
-        self._predictions = self._model.predict(self._compact_vectors(self._test_X))
+        self._predictions = self._model.predict(X)
         self._metrics_results = []
         for metric in self._metrics:
-            result = metric.evaluate(self._predictions, self._test_y)
+            result = metric.evaluate(self._predictions, Y)
             self._metrics_results.append((metric, result))
         return self._predictions, self._metrics_results
 
-    def execute(self):
+    def execute(self, only_test_data=False):
         # I added evaluation steps for both the training and testing datasets. It returns them in a output directory
         self._preprocess_features()
         self._split_data()
-        self._train()
-
-        train_predictions, train_metrics = self._evaluate(self._compact_vectors(self._train_X), self._train_y)
+        if not only_test_data:
+            self._train()
+            train_predictions, train_metrics = self._evaluate(self._compact_vectors(self._train_X), self._train_y)
         test_predictions, test_metrics = self._evaluate(self._compact_vectors(self._test_X), self._test_y)
 
+        if not only_test_data:
+            return {
+                "train_metrics": train_metrics,
+                "train_predictions": train_predictions,
+                "test_metrics": test_metrics,
+                "test_predictions": test_predictions,
+            }
         return {
-            "train_metrics": train_metrics,
-            "train_predictions": train_predictions,
             "test_metrics": test_metrics,
-            "test_predictions": test_predictions,
+            "test_predictions": test_predictions
         }
 
-    def __str__(self):
-        print(
-        f"""
-Chosen dataset: {self._dataset.name}
-Chosen model: {23}
-Chosen input features: {23}
+    def evaluate_new_data(self, dataset: Dataset, input_features: List[Feature], target_feature: Feature):
+        new_pipeline = Pipeline(
+            metrics=self._metrics,
+            dataset=dataset,
+            model = self._model,
+            input_features = input_features,
+            target_feature= target_feature,
+            split = 0
+        )
+        return new_pipeline.execute(only_test_data=True)
 
-        """
+
+    def to_artifact(self, name: str, id: str, path:str, version = "1.0.0") -> Artifact:
+        data = {
+            "metrics": [metric.name for metric in self._metrics],
+            "dataset": self._dataset.id,
+            "model": self._model.name,
+            "input_features": [feature.to_tuple() for feature in self._input_features],
+            "target_feature": self._target_feature.to_tuple(),
+            "split": self._split
+        }
+        return Artifact(
+            name=name,
+            type="pipeline",
+            asset_path=path,
+            data=pickle.dumps(data),
+            version=version,
+            id=id
+        )
+
+    @classmethod
+    def from_artefact(cls, artifact: Artifact, registry: ArtifactRegistry, input_features=[], target_feature=None) -> "Pipeline":
+        data = pickle.loads(artifact.data)
+        print(data)
+
+        return cls(
+            metrics = [get_metric(metric) for metric in data.get("metrics")],
+            dataset = registry.get(data.get("dataset")),
+            model = get_model(data.get("model")),
+            input_features = [Feature.from_tuple(feature) for feature in data.get("input_features")],
+            target_feature = Feature.from_tuple(data.get("target_feature")),
+            split = data.get("split")
         )

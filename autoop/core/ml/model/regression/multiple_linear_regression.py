@@ -5,6 +5,7 @@ import numpy as np
 class MultipleLinearRegression(Model):
 
     _type = "regression"
+    _name: str = "multiple linear regression"
 
     def __init__(self):
         self._model = LinearRegression()

@@ -14,6 +14,7 @@ class Lasso(Model):
     """
 
     _type: str = "regression"
+    _name: str = "lasso regression"
 
     def __init__(self):
         self._lasso: linear_model.Lasso = linear_model.Lasso()

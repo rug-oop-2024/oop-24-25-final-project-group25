@@ -14,13 +14,18 @@ class Model(ABC):
     """
 
     _type: str
+    _name: str
 
     def __init__(self):
         self._parameters: dict = None
 
     @property
-    def type(self):
+    def type(self)->str:
         return self._type
+
+    @property
+    def name(self)->str:
+        return self._name
 
     @property
     def parameters(self):

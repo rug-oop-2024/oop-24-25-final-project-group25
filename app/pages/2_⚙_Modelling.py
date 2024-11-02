@@ -20,13 +20,13 @@ write_helper_text("In this section, you can design a machine learning pipeline t
 automl = AutoMLSystem.get_instance()
 
 datasets = automl.registry.list(type="dataset")
+pipelines = automl.registry.list(type="pipeline")
 
 # your code here
 st.write("Configure your pipeline below:")
 
 dataset = st.selectbox(label="Choose the desired dataset", options = datasets, index=None, format_func=lambda artifact: artifact.name)
 
-pipeline = None
 
 if not dataset is None:
 
@@ -61,10 +61,20 @@ if not dataset is None:
                 if any([metric.type != target_type for metric in metrics]):
                     st.write("types do not match")
                 else:
-                    if st.button(label="Create pipeline"):
-                        st.write("Pipeline created!")
-                        pipeline = Pipeline(metrics, dataset, model, input_features, target_feature, split/100)
+                    pipeline = Pipeline(metrics, dataset, model, input_features, target_feature, split/100)
+
+                    st.write(pipeline)
+
+                    if st.button(label = "Run"):
+                        st.write(pipeline.execute())
 
 
-
+                    name = st.text_input(label="Enter name of pipeline to save", value=None)
+                    if not name is None:
+                        if st.button(label="Save pieline"):
+                            st.write("Pipeline saved!")
+                            id = "p"+str(len(pipelines))
+                            artifact = pipeline.to_artifact(name=name, id=id, path="pipeline"+name+".bin")
+                            automl.registry.register(artifact)
+                            st.write("CRY, BOY, HAHAHAHHAHAH NOTHING WORKS")
 
