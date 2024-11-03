@@ -3,7 +3,8 @@ import base64
 import pandas as pd
 import io
 
-class Artifact():
+
+class Artifact:
     """
     Class representing an artifact.
 
@@ -16,16 +17,17 @@ class Artifact():
         tags (list[str]): list of the tags for the asset
         metadata (dict): dcitionary holding the asset's metadata
     """
+
     def __init__(
-            self,
-            type: str=None,
-            name: str=None,
-            version: str=None,
-            asset_path: str=None,
-            data: bytes=None,
-            tags: list[str]=None,
-            metadata: dict=None,
-            id: str = None
+        self,
+        type: str = None,
+        name: str = None,
+        version: str = None,
+        asset_path: str = None,
+        data: bytes = None,
+        tags: list[str] = None,
+        metadata: dict = None,
+        id: str = None,
     ) -> None:
         """
         Initialize an Artifact object.
@@ -72,11 +74,3 @@ class Artifact():
         """
         self.data = new_data
         return self.data
-
-
-
-
-
-
-
-

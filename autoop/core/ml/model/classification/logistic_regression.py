@@ -1,5 +1,6 @@
 from sklearn.linear_model import LogisticRegression as SklearnLogisticRegression
 
+
 class LogisticRegressionModel:
 
     _type: str = "classification"
@@ -12,8 +13,8 @@ class LogisticRegressionModel:
         """Fits the logistic regression model to the data."""
         self._model.fit(X, y)
         self._parameters = {
-            'coef': self._model.coef_,
-            'intercept': self._model.intercept_
+            "coef": self._model.coef_,
+            "intercept": self._model.intercept_,
         }
 
     def predict(self, X):
@@ -27,4 +28,3 @@ class LogisticRegressionModel:
     def get_params(self):
         """Returns the model parameters."""
         return self._parameters
-

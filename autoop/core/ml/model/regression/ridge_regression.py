@@ -19,7 +19,6 @@ class Ridge(Model):
     def __init__(self):
         self._ridge: linear_model.Ridge = linear_model.Ridge()
 
-
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray):
         """
         Adjust model's parameters in accordance with the observations and
@@ -33,8 +32,8 @@ class Ridge(Model):
             None
         """
         self._ridge.fit(observations, ground_truth)
-        self._parameters["coef_"] = self._ridge.coef_
-        self._parameters["intercept_"] = self._ridge.intercept_
+        self.parameters["coef_"] = self._ridge.coef_
+        self.parameters["intercept_"] = self._ridge.intercept_
 
     def predict(self, observations: np.ndarray):
         """

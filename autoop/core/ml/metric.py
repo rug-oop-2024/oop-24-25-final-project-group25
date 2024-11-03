@@ -8,24 +8,26 @@ METRICS = [
     "precision_macro",
     "recall_macro",
     "mean_absolute_error",
-    "r_squared"
-] # add the names (in strings) of the metrics you implement
+    "r_squared",
+]  # add the names (in strings) of the metrics you implement
+
 
 class Metric(ABC):
     """
     Abstract base class for all metrics.
     """
+
     # your code here
     # remember: metrics take ground truth and prediction as input and return a real number
     _type: str
     _name: str
 
     @property
-    def name(self)->str:
+    def name(self) -> str:
         return self._name
 
     @property
-    def type(self)->str:
+    def type(self) -> str:
         """
         Return a metric's type.
 
@@ -50,17 +52,23 @@ class Metric(ABC):
         """
         pass
 
+    def __str__(self):
+        return self._name
+
     def __call__(self, predictions, actual) -> float:
         return self.evaluate(predictions, actual)
 
+
 # add here concrete implementations of the Metric class
+
 
 class MeanSquaredError(Metric):
     """
     Class representing the mean-squared-error metric.
     """
-    _type:str = "numerical"
-    name:str = "mean_squared_error"
+
+    _type: str = "numerical"
+    _name: str = "mean_squared_error"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray) -> float:
@@ -78,17 +86,18 @@ class MeanSquaredError(Metric):
         sum = 0
 
         for i in range(n):
-            sum += (predictions[i] - actual[i])**2
+            sum += (predictions[i] - actual[i]) ** 2
 
-        return sum/n
+        return sum / n
+
 
 class Accuracy(Metric):
     """
     Class representing the accuracy metric.
     """
 
-    _type:str = "categorical"
-    name: str = "accuracy"
+    _type: str = "categorical"
+    _name: str = "accuracy"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray):
@@ -98,7 +107,7 @@ class Accuracy(Metric):
         for i in range(n):
             sum += int(predictions[i] == actual[i])
 
-        return sum/n
+        return sum / n
 
 
 class PrecisionMacro(Metric):
@@ -106,8 +115,8 @@ class PrecisionMacro(Metric):
     Class representing the macro precision metric.
     """
 
-    _type:str = "categorical"
-    name:str = "precision_macro"
+    _type: str = "categorical"
+    _name: str = "precision_macro"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray):
@@ -123,21 +132,21 @@ class PrecisionMacro(Metric):
                         TP += 1
                     else:
                         FP += 1
-            macro_sum += TP/(TP+FP)
+            macro_sum += TP / (TP + FP)
 
-        return macro_sum/len(categories)
+        return macro_sum / len(categories)
+
 
 class RecallMacro(Metric):
     """
     Class representing the macro recall metric.
     """
 
-    _type:str = "categorical"
-    name:str = "recall_macro"
+    _type: str = "categorical"
+    _name: str = "recall_macro"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray):
-
 
         categories = np.unique(actual)
         macro_sum = 0
@@ -152,17 +161,18 @@ class RecallMacro(Metric):
                     if predictions[i] != actual[i]:
                         FN += 1
 
-            macro_sum += TP/(TP+FN)
+            macro_sum += TP / (TP + FN)
 
-        return macro_sum/len(categories)
+        return macro_sum / len(categories)
+
 
 class MeanAbsoluteError(Metric):
     """
     Class representing the mean metric.
     """
 
-    _type:str = "numerical"
-    name:str = "mean_absolute_error"
+    _type: str = "numerical"
+    _name: str = "mean_absolute_error"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray) -> float:
@@ -182,7 +192,7 @@ class MeanAbsoluteError(Metric):
         for i in range(n):
             sum += abs(predictions[i] - actual[i])
 
-        return sum/n
+        return sum / n
 
 
 class RSquared(Metric):
@@ -190,8 +200,8 @@ class RSquared(Metric):
     Class representing the R-squared error.
     """
 
-    _type:str = "numerical"
-    name:str = "r_squared"
+    _type: str = "numerical"
+    _name: str = "r_squared"
 
     @staticmethod
     def evaluate(predictions: np.ndarray, actual: np.ndarray) -> float:
@@ -201,10 +211,10 @@ class RSquared(Metric):
         sum_divider = 0
 
         for i in range(len(predictions)):
-            sum_denominator += (actual[i] - predictions[i])**2
-            sum_divider += (actual[i] - mean)**2
+            sum_denominator += (actual[i] - predictions[i]) ** 2
+            sum_divider += (actual[i] - mean) ** 2
 
-        return 1-(sum_denominator/sum_divider)
+        return 1 - (sum_denominator / sum_divider)
 
 
 def get_metric(name: str) -> Metric:

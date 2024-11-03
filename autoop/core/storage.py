@@ -3,14 +3,17 @@ import os
 from typing import List, Union
 from glob import glob
 
+
 class NotFoundError(Exception):
     def __init__(self, path):
         super().__init__(f"Path not found: {path}")
+
 
 class Storage(ABC):
     """
     Abstract class representing a storage for data to be stored in.
     """
+
     @abstractmethod
     def save(self, data: bytes, path: str):
         """
@@ -61,7 +64,7 @@ class LocalStorage(Storage):
         _base_path (str): path to the storage.
     """
 
-    def __init__(self, base_path: str="./assets") -> None:
+    def __init__(self, base_path: str = "./assets") -> None:
         """Initialize an object of the LocalStorage type."""
 
         self._base_path = base_path
@@ -82,7 +85,7 @@ class LocalStorage(Storage):
         path = self._join_path(key)
         if not os.path.exists(path):
             os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, 'wb') as f:
+        with open(path, "wb") as f:
             f.write(data)
 
     def load(self, key: str) -> bytes:
@@ -95,10 +98,10 @@ class LocalStorage(Storage):
         """
         path = self._join_path(key)
         self._assert_path_exists(path)
-        with open(path, 'rb') as f:
+        with open(path, "rb") as f:
             return f.read()
 
-    def delete(self, key: str="/") -> None:
+    def delete(self, key: str = "/") -> None:
         """
         Delete data at a given path
         Args:
@@ -136,7 +139,7 @@ class LocalStorage(Storage):
         """
         if not os.path.exists(path):
             raise NotFoundError(path)
-    
+
     def _join_path(self, path: str) -> str:
         """
         Joins a path to the base path.
@@ -147,6 +150,3 @@ class LocalStorage(Storage):
             str: the joined path.
         """
         return os.path.join(self._base_path, path)
-
-
-    

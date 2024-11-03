@@ -1,10 +1,10 @@
-
 import json
 from typing import Dict, Tuple, List, Union
 
 from autoop.core.storage import Storage
 
-class Database():
+
+class Database:
     """
     Class representing a database.
 
@@ -13,6 +13,7 @@ class Database():
         _data (dict): ditionary containing the data currently loaded into the
             database.
     """
+
     def __init__(self, storage: Storage) -> None:
         """
         Initialise an object of the Database class.
@@ -50,7 +51,7 @@ class Database():
         if not self._data.get(collection, None):
             return None
         return self._data[collection].get(id, None)
-    
+
     def delete(self, collection: str, id: str) -> None:
         """Delete a key from the database
         Args:
@@ -94,7 +95,7 @@ class Database():
             collection, id = key.split("\\")[-2:]
             if not self.get(collection, id):
                 self._storage.delete(f"{collection}/{id}")
-    
+
     def _load(self) -> None:
         """Load the data from storage"""
         self._data = {}

@@ -19,7 +19,6 @@ class Lasso(Model):
     def __init__(self):
         self._lasso: linear_model.Lasso = linear_model.Lasso()
 
-
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray):
         """
         Adjust model's parameters in accordance with the observations and
@@ -33,8 +32,8 @@ class Lasso(Model):
             None
         """
         self._lasso.fit(observations, ground_truth)
-        self._parameters["coef_"] = self._lasso.coef_
-        self._parameters["intercept_"] = self._lasso.intercept_
+        self.parameters["coef_"] = self._lasso.coef_
+        self.parameters["intercept_"] = self._lasso.intercept_
 
     def predict(self, observations: np.ndarray):
         """

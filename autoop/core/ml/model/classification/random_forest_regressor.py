@@ -1,5 +1,6 @@
 from sklearn.ensemble import RandomForestClassifier as SklearnRandomForestClassifier
 
+
 class RandomForestClassifierModel:
 
     _type: str = "classification"
@@ -12,8 +13,8 @@ class RandomForestClassifierModel:
         """Fits the random forest classifier model to the data."""
         self._model.fit(X, y)
         self._parameters = {
-            'n_estimators': self._model.n_estimators,
-            'max_depth': self._model.max_depth
+            "n_estimators": self._model.n_estimators,
+            "max_depth": self._model.max_depth,
         }
 
     def predict(self, X):
@@ -27,5 +28,3 @@ class RandomForestClassifierModel:
     def get_params(self):
         """Returns the model parameters."""
         return self._parameters
-
-        

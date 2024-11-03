@@ -2,6 +2,7 @@ from sklearn.linear_model import LinearRegression
 from autoop.core.ml.model.model import Model
 import numpy as np
 
+
 class MultipleLinearRegression(Model):
 
     _type = "regression"

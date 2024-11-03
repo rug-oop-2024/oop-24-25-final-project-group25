@@ -1,9 +1,9 @@
-
 from abc import abstractmethod, ABC
 from autoop.core.ml.artifact import Artifact
 import numpy as np
 from copy import deepcopy
 from typing import Literal
+
 
 class Model(ABC):
     """
@@ -20,11 +20,11 @@ class Model(ABC):
         self._parameters: dict = None
 
     @property
-    def type(self)->str:
+    def type(self) -> str:
         return self._type
 
     @property
-    def name(self)->str:
+    def name(self) -> str:
         return self._name
 
     @property
@@ -36,6 +36,9 @@ class Model(ABC):
             dictionary containing the object's parameters.
         """
         return deepcopy(self._parameters)
+
+    def __str__(self):
+        return self._name
 
     @abstractmethod
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
@@ -49,4 +52,3 @@ class Model(ABC):
         parameters.
         """
         pass
-    

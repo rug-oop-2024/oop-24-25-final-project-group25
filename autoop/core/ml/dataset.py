@@ -3,19 +3,26 @@ from abc import ABC, abstractmethod
 import pandas as pd
 import io
 
+
 class Dataset(Artifact):
 
     def __init__(self, *args, **kwargs):
         super().__init__(type="dataset", *args, **kwargs)
 
     @staticmethod
-    def from_dataframe(data: pd.DataFrame, name: str, asset_path: str, id: str = None, version: str="1.0.0"):
+    def from_dataframe(
+        data: pd.DataFrame,
+        name: str,
+        asset_path: str,
+        id: str = None,
+        version: str = "1.0.0",
+    ):
         return Dataset(
             name=name,
             asset_path=asset_path,
             data=data.to_csv(index=False).encode(),
             version=version,
-            id=id
+            id=id,
         )
 
     def read(self) -> pd.DataFrame:
