@@ -1,11 +1,19 @@
 from abc import ABC, abstractmethod
 import os
-from typing import List, Union
+from typing import List
 from glob import glob
 
 
 class NotFoundError(Exception):
-    def __init__(self, path):
+    """Class representing a custom error for a path not found"""
+
+    def __init__(self, path: str) -> None:
+        """
+        Initialise a NotFoundError instance.
+
+        Args:
+            path (str): path not found
+        """
         super().__init__(f"Path not found: {path}")
 
 
@@ -15,7 +23,7 @@ class Storage(ABC):
     """
 
     @abstractmethod
-    def save(self, data: bytes, path: str):
+    def save(self, data: bytes, path: str) -> None:
         """
         Save data to a given path
         Args:
@@ -36,7 +44,7 @@ class Storage(ABC):
         pass
 
     @abstractmethod
-    def delete(self, path: str):
+    def delete(self, path: str) -> None:
         """
         Delete data at a given path
         Args:
@@ -58,14 +66,22 @@ class Storage(ABC):
 
 class LocalStorage(Storage):
     """
-    Class representing a local storage.
+    Class representing a locally existent storage.
 
     Attributes:
-        _base_path (str): path to the storage.
+        _base_path (str): base path for files to be stored.
     """
 
     def __init__(self, base_path: str = "./assets") -> None:
-        """Initialize an object of the LocalStorage type."""
+        """
+        Initialize an object of the LocalStorage type.
+
+        Args:
+            base_path: base path for files to be stored.
+
+        Returns:
+            None
+        """
 
         self._base_path = base_path
         if not os.path.exists(self._base_path):
@@ -73,11 +89,11 @@ class LocalStorage(Storage):
 
     def save(self, data: bytes, key: str) -> None:
         """
-        Save data to a given path.
+        Save data with a specific key.
 
         Args:
             data (bytes): Data to save
-            key (str): Key of the saved data
+            key (str): Key of the saved data, used in creating its path
 
         Returns:
             None
@@ -90,9 +106,9 @@ class LocalStorage(Storage):
 
     def load(self, key: str) -> bytes:
         """
-        Load data from a given path
+        Load data with a given key.
         Args:
-            path (str): Path to load data
+            key (str): Key of the data
         Returns:
             bytes: Loaded data
         """
@@ -103,9 +119,9 @@ class LocalStorage(Storage):
 
     def delete(self, key: str = "/") -> None:
         """
-        Delete data at a given path
+        Delete data with a given key.
         Args:
-            path (str): Path to delete data
+            key (str): Key of the data
         Returns:
             None
         """
@@ -115,7 +131,7 @@ class LocalStorage(Storage):
 
     def list(self, prefix: str) -> List[str]:
         """
-        List all paths under a given path
+        List all paths under a given prefix
         Args:
             path (str): Path to list
         Returns:
@@ -128,7 +144,7 @@ class LocalStorage(Storage):
 
     def _assert_path_exists(self, path: str) -> None:
         """
-        Check if the path exists.
+        Check if a given path exists.
 
         Args:
             path (str): the path to check
@@ -142,10 +158,10 @@ class LocalStorage(Storage):
 
     def _join_path(self, path: str) -> str:
         """
-        Joins a path to the base path.
+        Joins a given addition to the base path.
 
         Args:
-            path (str): path to join.
+            path (str): addition to be joined to the base path
         Returns:
             str: the joined path.
         """

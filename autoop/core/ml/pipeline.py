@@ -14,6 +14,17 @@ import numpy as np
 
 
 class Pipeline:
+    """
+    Class representing a machine learning pipeline.
+
+    Attributes:
+        metrics(List[Metric]): list of metrics to be applies on the predictions
+        dataset(Dataset): dataset containing the data
+        model(Model): the used machine learning model
+        input_features(List[Feature]): list of features acting as input
+        target_feature(Feature): target feature
+        split(float): how much of the data that will be used for training
+    """
 
     def __init__(
         self,
@@ -22,8 +33,22 @@ class Pipeline:
         model: Model,
         input_features: List[Feature],
         target_feature: Feature,
-        split=0.8,
-    ):
+        split: float = 0.8,
+    ) -> None:
+        """
+        Initialize a Pipeline object.
+
+        Args:
+            metrics(List[Metric]): list of metrics to be applies on the predictions
+            dataset(Dataset): dataset containing the data
+            model(Model): the used machine learning model
+            input_features(List[Feature]): list of features acting as input
+            target_feature(Feature): target feature
+            split(float): how much of the data that will be used for training
+
+        Returns:
+            None
+        """
         self._dataset = dataset
         self._model = model
         self._input_features = input_features
@@ -40,7 +65,13 @@ class Pipeline:
                 "Model type must be regression for continuous target feature"
             )
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        Define the object's string representation.
+
+        Returns:
+            str: string representation of the object
+        """
         return f"""
 Pipeline(
     model = {self._model.name} (of type {self._model.type}),
@@ -53,12 +84,23 @@ Pipeline(
 """
 
     @property
-    def model(self):
+    def model(self) -> Model:
+        """
+        Return the object's model.
+
+        Returns:
+            Model: object's model
+        """
         return self._model
 
     @property
     def artifacts(self) -> List[Artifact]:
-        """Used to get the artifacts generated during the pipeline execution to be saved"""
+        """
+        Used to get the artifacts generated during the pipeline execution to be saved.
+
+        Returns:
+            List[Artifact]
+        """
         artifacts = []
         for name, artifact in self._artifacts.items():
             artifact_type = artifact.get("type")
@@ -83,10 +125,14 @@ Pipeline(
         )
         return artifacts
 
-    def _register_artifact(self, name: str, artifact):
+    def _register_artifact(self, name: str, artifact) -> None:
+        """Add an artufact to the _artifacts attribute"""
+
         self._artifacts[name] = artifact
 
-    def _preprocess_features(self):
+    def _preprocess_features(self) -> None:
+        """Preprocess the features"""
+
         (target_feature_name, target_data, artifact) = preprocess_features(
             [self._target_feature], self._dataset
         )[0]
@@ -98,8 +144,12 @@ Pipeline(
         self._output_vector = target_data
         self._input_vectors = [data for (feature_name, data, artifact) in input_results]
 
-    def _split_data(self):
-        # Split the data into training and testing sets
+    def _split_data(self) -> None:
+        """
+        Split the data into training and testing sets baset on
+        the _split attribute.
+        """
+
         split = self._split
         self._train_X = [
             vector[: int(split * len(vector))] for vector in self._input_vectors
@@ -111,17 +161,39 @@ Pipeline(
         self._test_y = self._output_vector[int(split * len(self._output_vector)) :]
 
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
+        """
+        Concatenate the given vectors on the first axis.
+
+        Args:
+            vectors: vectors to concatenate
+
+        Returns:
+            np.ndarray: the array containing the concatenated list of arrays
+        """
+
         return np.concatenate(vectors, axis=1)
 
-    def _train(self):
+    def _train(self) -> None:
+        """Train the model."""
+
         X = self._compact_vectors(self._train_X)
         Y = self._train_y
         self._model.fit(X, Y)
 
-    # old one was: def _evaluate(self, X, Y)
-    def _evaluate(self, X, Y):
-        #  Modified to it can evaluate both training and testing datasets
-        # predictions = self._model.predict(X)
+    def _evaluate(self, X: np.ndarray, Y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Evaluate the predictions compared to the actual ground truth based on
+        the metrics.
+
+        Args:
+            X:numpy ndarray holding the data on which to make the predictions.
+            Y: actual ground truth.
+
+        Returns:
+            tuple: two arrays containing the
+                predictions and the results of the metrics
+        """
+
         self._predictions = self._model.predict(X)
         self._metrics_results = []
         for metric in self._metrics:
@@ -129,8 +201,19 @@ Pipeline(
             self._metrics_results.append((metric, result))
         return self._predictions, self._metrics_results
 
-    def execute(self, only_test_data=False):
-        # I added evaluation steps for both the training and testing datasets. It returns them in a output directory
+    def execute(self, only_test_data: bool = False) -> dict[str, np.ndarray]:
+        """
+        Execute the pipeline: preprocess the data, train the model (if
+        only_test_data is False), run the data through the model,
+        evaluate the results based on the metrics.
+
+        Args:
+            only_test_data: indicates if we should train the model (False), or
+                run just it on the entire dataset (True)
+
+        Returns:
+            dict: dictionary contain
+        """
         self._preprocess_features()
         self._split_data()
         if not only_test_data:
@@ -152,7 +235,17 @@ Pipeline(
         return {"test_metrics": test_metrics, "test_predictions": test_predictions}
 
     @staticmethod
-    def results_as_string(results: dict[str, np.ndarray]):
+    def results_as_string(results: dict[str, np.ndarray]) -> str:
+        """
+        Turn the results of the execute method into a nicely formatted
+        string.
+
+        Args:
+            results: the results to turn into a string
+
+        Returns:
+            str: the formatted results
+        """
         results_string = "Here are your results:\n\n"
         if len(results) > 2:
             results_string += "Train metrics:\n"
@@ -167,9 +260,24 @@ Pipeline(
         results_string += f"\nTest predictions:\n{test_pred}"
         return results_string
 
+    # TODO
     def evaluate_new_data(
         self, dataset: Dataset, input_features: List[Feature], target_feature: Feature
-    ):
+    ) -> dict[str, np.ndarray]:
+        """
+        Evaluate new data on the current pipeline.
+
+        Make a copy of the current pipeline but changing its dataset, input and
+        target features to the given ones, and its split to 0.
+
+        Args:
+            dataset: the dataset on which to perform the prediction.
+            input_features: the input features
+            target_feature: the target feature
+
+        Returns:
+            dict:
+        """
         new_pipeline = Pipeline(
             metrics=self._metrics,
             dataset=dataset,
@@ -181,6 +289,18 @@ Pipeline(
         return new_pipeline.execute(only_test_data=True)
 
     def to_artifact(self, name: str, id: str, path: str, version="1.0.0") -> Artifact:
+        """
+        Turn the current pipeline into an artifact.
+
+        Args:
+            name: name of the artifact
+            id: id of the artifact into the database
+            path: path of the artifact
+            version: version of the artifact
+
+        Returns:
+            Artifact: the generated artifact
+        """
         data = {
             "metrics": [metric.name for metric in self._metrics],
             "dataset": self._dataset.id,
@@ -203,9 +323,17 @@ Pipeline(
         cls,
         artifact: Artifact,
         registry: ArtifactRegistry,
-        input_features=[],
-        target_feature=None,
     ) -> "Pipeline":
+        """
+        Classmethod to turn the given artifact into a pipeline.
+
+        Args:
+            artifact: Artifact to turn
+            registry: registry containing the artifact
+
+        Return:
+            Pipeline
+        """
         data = pickle.loads(artifact.data)
         print(data)
 

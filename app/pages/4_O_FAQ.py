@@ -13,5 +13,8 @@ write_helper_text(
     "In this section, you can quench the thirst of that little curious mind you have."
 )
 
+with st.expander(label="What OS was used for this assignment?"):
+    st.write("Vivat Windows!")
+
 with st.expander(label="Can I statistics?"):
-    st.write("Certainly!")
+    st.write("We all have that question.")

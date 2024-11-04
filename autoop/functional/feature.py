@@ -5,11 +5,13 @@ from autoop.core.ml.feature import Feature
 
 
 def detect_feature_types(dataset: Dataset) -> List[Feature]:
-    """Assumption: only categorical and numerical features and no NaN values.
+    """
+    Detect the features of a given dataset.
+    Assumption: only categorical and numerical features and no NaN values.
     Args:
-        dataset: Dataset
+        dataset: Dataset containing the features.
     Returns:
-        List[Feature]: List of features with their types.
+        List[Feature]: List of features belonging to the dataset.
     """
     features = []
     dataframe = dataset.read()

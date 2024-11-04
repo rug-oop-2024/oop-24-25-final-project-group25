@@ -9,7 +9,7 @@ class Database:
     Class representing a database.
 
     Attributes:
-        _storage (Storage): the storage where the data belongs.
+        _storage (Storage): the storage linked to the database.
         _data (dict): ditionary containing the data currently loaded into the
             database.
     """
@@ -17,17 +17,26 @@ class Database:
     def __init__(self, storage: Storage) -> None:
         """
         Initialise an object of the Database class.
+
+        Args:
+            storage: the storage linked to the database
+
+        Returns:
+            None
         """
         self._storage = storage
         self._data = {}
         self._load()
 
     def set(self, collection: str, id: str, entry: dict) -> dict:
-        """Set a key in the database
+        """
+        Add an item to the database and update the storage.
+
         Args:
             collection (str): The collection to store the data in
             id (str): The id of the data
             entry (dict): The data to store
+
         Returns:
             dict: The data that was stored
         """
@@ -41,10 +50,10 @@ class Database:
         return entry
 
     def get(self, collection: str, id: str) -> Union[dict, None]:
-        """Get a key from the database
+        """Get a stored entry from the database
         Args:
             collection (str): The collection to get the data from
-            id (str): The id of the data
+            id (str): The id of the data to get
         Returns:
             Union[dict, None]: The data that was stored, or None if it doesn't exist
         """
@@ -53,10 +62,13 @@ class Database:
         return self._data[collection].get(id, None)
 
     def delete(self, collection: str, id: str) -> None:
-        """Delete a key from the database
+        """
+        Delete an entry from the database.
+
         Args:
             collection (str): The collection to delete the data from
-            id (str): The id of the data
+            id (str): The id of the data to delete
+
         Returns:
             None
         """
@@ -67,9 +79,12 @@ class Database:
         self._persist()
 
     def list(self, collection: str) -> List[Tuple[str, dict]]:
-        """Lists all data in a collection
+        """
+        Lists all data in a collection.
+
         Args:
             collection (str): The collection to list the data from
+
         Returns:
             List[Tuple[str, dict]]: A list of tuples containing the id and data for each item in the collection
         """
