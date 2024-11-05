@@ -1,5 +1,3 @@
-from pydantic import BaseModel, Field
-import base64
 import pandas as pd
 import io
 
@@ -16,6 +14,7 @@ class Artifact:
         data (bytes): state of the data
         tags (list[str]): list of the tags for the asset
         metadata (dict): dcitionary holding the asset's metadata
+        id: id of the artifact in the database
     """
 
     def __init__(
@@ -40,6 +39,7 @@ class Artifact:
             data (bytes): state of the data
             tags (list[str]): list of the tags for the asset
             metadata (dict): dcitionary holding the asset's metadata
+            id: id of the artifact in the database
         returns:
             None
         """
@@ -52,16 +52,13 @@ class Artifact:
         self.metadata = metadata
         self.id = id
 
-    # def read(self) -> bytes:
-    #     """
-    #     Return the artifact's data.
-
-    #     Returns:
-    #         bytes: artifact's data
-    #     """
-    #     return self.data
-
     def read(self) -> pd.DataFrame:
+        """
+        Return a dataframe containing the artifact's data.
+
+        Returns:
+            DataFrame: dataframe containing the artifact's data
+        """
         csv = self.data.decode()
         return pd.read_csv(io.StringIO(csv))
 
@@ -69,8 +66,11 @@ class Artifact:
         """
         Save new data and return it.
 
+        Args:
+            new_data: data to be saved
+
         Returns:
-            bytes: the saved data.
+            bytes: the saved data
         """
         self.data = new_data
         return self.data

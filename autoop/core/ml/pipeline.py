@@ -201,7 +201,7 @@ Pipeline(
             self._metrics_results.append((metric, result))
         return self._predictions, self._metrics_results
 
-    def execute(self, only_test_data: bool = False) -> dict[str, np.ndarray]:
+    def execute(self) -> dict[str, np.ndarray]:
         """
         Execute the pipeline: preprocess the data, train the model (if
         only_test_data is False), run the data through the model,
@@ -216,23 +216,21 @@ Pipeline(
         """
         self._preprocess_features()
         self._split_data()
-        if not only_test_data:
-            self._train()
-            train_predictions, train_metrics = self._evaluate(
-                self._compact_vectors(self._train_X), self._train_y
-            )
+        self._train()
+        train_predictions, train_metrics = self._evaluate(
+            self._compact_vectors(self._train_X), self._train_y
+        )
+
         test_predictions, test_metrics = self._evaluate(
             self._compact_vectors(self._test_X), self._test_y
         )
 
-        if not only_test_data:
-            return {
-                "train_metrics": train_metrics,
-                "train_predictions": train_predictions,
-                "test_metrics": test_metrics,
-                "test_predictions": test_predictions,
-            }
-        return {"test_metrics": test_metrics, "test_predictions": test_predictions}
+        return {
+            "train_metrics": train_metrics,
+            "train_predictions": train_predictions,
+            "test_metrics": test_metrics,
+            "test_predictions": test_predictions,
+        }
 
     @staticmethod
     def results_as_string(results: dict[str, np.ndarray]) -> str:
@@ -247,46 +245,60 @@ Pipeline(
             str: the formatted results
         """
         results_string = "Here are your results:\n\n"
-        if len(results) > 2:
-            results_string += "Train metrics:\n"
-            for metric in results["train_metrics"]:
-                results_string += f"{metric[0]}: {metric[1]}\n"
-            train_pred = results["train_predictions"]
-            results_string += f"\nTrain predictions:\n{train_pred}\n\n"
+        results_string += "Train metrics:\n"
+
+        for metric in results["train_metrics"]:
+            results_string += f"{metric[0]}: {metric[1]}\n"
+
+        train_pred = results["train_predictions"]
+        results_string += f"\nTrain predictions:\n{train_pred}\n\n"
         results_string += "Test metrics:\n"
+
         for metric in results["test_metrics"]:
             results_string += f"{metric[0]}: {metric[1]}\n"
+
         test_pred = results["test_predictions"]
         results_string += f"\nTest predictions:\n{test_pred}"
+
         return results_string
 
-    # TODO
-    def evaluate_new_data(
-        self, dataset: Dataset, input_features: List[Feature], target_feature: Feature
-    ) -> dict[str, np.ndarray]:
+    def predict_new_data(
+        self, dataset: Dataset, input_features: List[Feature], as_str=False
+    ) -> dict[str, np.ndarray] | str:
         """
-        Evaluate new data on the current pipeline.
-
-        Make a copy of the current pipeline but changing its dataset, input and
-        target features to the given ones, and its split to 0.
+        Make predictions based on the new new data.
 
         Args:
             dataset: the dataset on which to perform the prediction.
             input_features: the input features
-            target_feature: the target feature
+            as_str: if the results should be returned as a string
 
         Returns:
-            dict:
+            dict|str: representation of the predictions, str if as_str is True,
+                dict otherwise
         """
         new_pipeline = Pipeline(
             metrics=self._metrics,
             dataset=dataset,
             model=self._model,
             input_features=input_features,
-            target_feature=target_feature,
+            target_feature=self._target_feature,
             split=0,
         )
-        return new_pipeline.execute(only_test_data=True)
+        new_pipeline._preprocess_features()
+
+        if not as_str:
+            return {
+                "Predictions": new_pipeline._model.predict(
+                    new_pipeline._compact_vectors(new_pipeline._input_vectors)
+                )
+            }
+
+        return "Predictions: " + str(
+            new_pipeline._model.predict(
+                new_pipeline._compact_vectors(new_pipeline._input_vectors)
+            )
+        )
 
     def to_artifact(self, name: str, id: str, path: str, version="1.0.0") -> Artifact:
         """

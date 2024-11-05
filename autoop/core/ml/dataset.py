@@ -5,8 +5,12 @@ import io
 
 
 class Dataset(Artifact):
+    """
+    Class representing a dataset.
+    """
 
     def __init__(self, *args, **kwargs):
+        """Initialize a dataset object"""
         super().__init__(type="dataset", *args, **kwargs)
 
     @staticmethod
@@ -17,6 +21,19 @@ class Dataset(Artifact):
         id: str = None,
         version: str = "1.0.0",
     ):
+        """
+        Construct a dataset from a given dataframe.
+
+        Args:
+            data: provided dataframe
+            name: name of the dataset
+            asset_path: path of the asset corresponding to the dataset
+            id: id of the dataset in the database
+            version: version of the dataset
+
+        Returns:
+            Dataste: created dataset
+        """
         return Dataset(
             name=name,
             asset_path=asset_path,
@@ -25,11 +42,16 @@ class Dataset(Artifact):
             id=id,
         )
 
-    def read(self) -> pd.DataFrame:
-        csv = self.data.decode()
-        return pd.read_csv(io.StringIO(csv))
-
     def save(self, data: pd.DataFrame) -> bytes:
+        """
+        Save data into the database.
+
+        Args:
+            data: dataframe containing the data.
+
+        Returns:
+            bytes: the encoded version of the saved data.
+        """
         bytes = data.to_csv(index=False).encode()
         return super().save(bytes)
 

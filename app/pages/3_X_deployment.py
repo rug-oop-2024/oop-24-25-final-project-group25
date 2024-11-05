@@ -51,20 +51,9 @@ if selected_pipeline is not None:
             input_features = st.multiselect(
                 label="select input features", options=features
             )
-            target_feature = st.selectbox(
-                label="select target feature", options=features, index=None
-            )
 
-            if (
-                not target_feature is None
-                and not input_features is None
-                and not target_feature in input_features
-            ):
+            if not input_features is None:
                 if st.button(label="Run on new data"):
                     st.write(
-                        pipeline.results_as_string(
-                            pipeline.evaluate_new_data(
-                                dataset, input_features, target_feature
-                            )
-                        )
+                        pipeline.predict_new_data(dataset, input_features, as_str=True)
                     )

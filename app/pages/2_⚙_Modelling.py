@@ -124,7 +124,12 @@ if action == "Configure new pipeline":
                             name = st.text_input(
                                 label="Enter name of pipeline to save", value=None
                             )
-                            if not name is None:
+
+                            version = st.text_input(
+                                label="Enter version of the pipeline to save",
+                                value="1.0.0",
+                            )
+                            if not name is None and not version is None:
                                 if st.button(label="Save pieline"):
                                     st.write("Pipeline saved!")
                                     id = "p" + str(len(pipelines))
@@ -132,8 +137,10 @@ if action == "Configure new pipeline":
                                         name=name,
                                         id=id,
                                         path=("pipeline" + name + ".bin"),
+                                        version=version,
                                     )
                                     automl.registry.register(artifact)
+                                    st.rerun()
 
 elif action == "Delete existing pipeline":
     # delete a pipeline
