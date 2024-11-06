@@ -5,8 +5,6 @@ from autoop.core.ml.model.regression.multiple_linear_regression import (
 from autoop.core.ml.model.regression.lasso_regression import Lasso
 from autoop.core.ml.model.regression.ridge_regression import Ridge
 
-# from autoop.core.ml.model.classification.decision_tree_calssifier import DecisionTreeClassifierModel
-
 REGRESSION_MODELS = [
     "lasso regression",
     "multiple linear regression",
@@ -17,6 +15,15 @@ CLASSIFICATION_MODELS = ["decision tree classifier"]
 
 
 def get_model(model_name: str) -> Model:
+    """
+    Return a model from a given name.
+
+    Args:
+        model_name: name of the model top return
+
+    Returns:
+        Model: model named by the given name
+    """
     match model_name:
         case "lasso regression":
             return Lasso()
