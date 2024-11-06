@@ -1,4 +1,3 @@
-from autoop.core.ml.artifact import Artifact
 import streamlit as st
 
 st.set_page_config(
@@ -7,7 +6,6 @@ st.set_page_config(
 )
 st.logo("app\images\logo.png", size="large")
 st.sidebar.success("Select a page above.")
-# st.markdown(open("README.md").read())
 
 
 def write_helper_text(text: str):

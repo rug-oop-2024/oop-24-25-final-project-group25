@@ -69,9 +69,6 @@ class Metric(ABC):
         return self.evaluate(predictions, actual)
 
 
-# add here concrete implementations of the Metric class
-
-
 class MeanSquaredError(Metric):
     """
     Class representing the mean-squared-error metric.
