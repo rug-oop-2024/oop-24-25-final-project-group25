@@ -51,7 +51,13 @@ class Model(ABC):
         """
         return deepcopy(self._parameters)
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        Return model's name.
+
+        Returns:
+            str: model's name
+        """
         return self._name
 
     @abstractmethod

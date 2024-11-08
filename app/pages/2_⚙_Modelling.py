@@ -29,8 +29,7 @@ def write_helper_text(text: str):
 
 st.write("# ⚙ Modelling")
 write_helper_text(
-    "In this section, you can design a machine learning pipeline to train"
-    + " a model on a dataset."
+    "In this section, you can design a machine learning pipeline"
 )
 
 automl = AutoMLSystem.get_instance()
@@ -120,8 +119,7 @@ if action == "Configure new pipeline":
                             [metric.type != target_type for metric in metrics]
                         ):
                             st.write(
-                                "One or more of the chosen metrics is not" +
-                                f" for type {target_type}"
+                                f"Chosen metrics are not for {target_type}"
                             )
                         else:
                             pipeline = Pipeline(

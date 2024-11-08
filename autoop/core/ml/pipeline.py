@@ -29,8 +29,8 @@ class Pipeline:
         metrics: List[Metric],
         dataset: Dataset,
         model: Model,
-        input_features: List[Feature],
-        target_feature: Feature,
+        input_ftrs: List[Feature],
+        target_ftr: Feature,
         split: float = 0.8,
     ) -> None:
         """
@@ -50,20 +50,18 @@ class Pipeline:
         """
         self._dataset = dataset
         self._model = model
-        self._input_features = input_features
-        self._target_feature = target_feature
+        self._input_features = input_ftrs
+        self._target_feature = target_ftr
         self._metrics = metrics
         self._artifacts = {}
         self._split = split
         if (
-            target_feature.type == "categorical"
-            and model.type != "classification"
+            target_ftr.type == "categorical" and model.type != "classification"
         ):
             raise ValueError(
-                "Model type must be classification for categorical"
-                + " target feature"
+                "Model type must be classification for a categorical target"
             )
-        if target_feature.type == "numerical" and model.type != "regression":
+        if target_ftr.type == "numerical" and model.type != "regression":
             raise ValueError(
                 "Model type must be regression for continuous target feature"
             )

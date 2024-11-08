@@ -24,7 +24,7 @@ CLASSIFICATION_MODELS = [
     "decision tree classifier",
     "k-nearest neighbors classifier",
     "random forest classifier"
-    ]
+]
 
 
 def get_model(model_name: str) -> Model:
