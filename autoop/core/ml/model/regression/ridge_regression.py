@@ -8,18 +8,25 @@ class Ridge(Model):
     Facade class for the sklean Ridge model.
 
     Attributes:
-        _ridge: linear_model.Ridge model used for the calculations.
-        _parameters: dictionary of the parameters, containing the
-                    coeficient and intercept.
+
+        _type(str): static attribute representing the Model's type: regression
+        _name(str): static attribute representing the model's name
+        _ridge(Ridge): linear_model.Ridge model used for the calculations
     """
 
     _type: str = "regression"
+    _name: str = "ridge regression"
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Initialise instance of the Ridge class.
+
+        Returns:
+            None
+        """
         self._ridge: linear_model.Ridge = linear_model.Ridge()
 
-
-    def fit(self, observations: np.ndarray, ground_truth: np.ndarray):
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
         Adjust model's parameters in accordance with the observations and
         ground truth.
@@ -32,10 +39,8 @@ class Ridge(Model):
             None
         """
         self._ridge.fit(observations, ground_truth)
-        self._parameters["coef_"] = self._ridge.coef_
-        self._parameters["intercept_"] = self._ridge.intercept_
 
-    def predict(self, observations: np.ndarray):
+    def predict(self, observations: np.ndarray) -> np.ndarray:
         """
         Predict the ground truth based on given observations.
 
@@ -48,5 +53,11 @@ class Ridge(Model):
         return self._ridge.predict(observations)
 
     @property
-    def parameters(self):
+    def parameters(self) -> dict:
+        """
+        Return model's paranmeters.
+
+        Returns:
+            dict: model's parameters
+        """
         return self._ridge.get_params()

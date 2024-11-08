@@ -13,6 +13,7 @@ from autoop.core.ml.dataset import Dataset  # noqa : E402
 from autoop.core.ml.feature import Feature  # noqa : E402
 from autoop.functional.feature import detect_feature_types  # noqa : E402
 
+
 class TestFeatures(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -73,11 +74,13 @@ class TestFeatures(unittest.TestCase):
         for feature in features:
             self.assertIsInstance(feature, Feature)
             self.assertEqual(feature.name in data.feature_names, True)
-        for detected_feature in filter(lambda x: x.name in numerical_columns,
-                                       features):
+        for detected_feature in filter(
+            lambda x: x.name in numerical_columns, features
+        ):
             self.assertEqual(detected_feature.type, "numerical")
-        for detected_feature in filter(lambda x: x.name in categorical_columns,
-                                       features):
+        for detected_feature in filter(
+            lambda x: x.name in categorical_columns, features
+        ):
             self.assertEqual(detected_feature.type, "categorical")
 
 
