@@ -7,11 +7,15 @@ class Dataset(Artifact):
     Class representing a dataset.
     """
 
+
+class Dataset(Artifact):
+    """A class to represent an ML dataset"""
     def __init__(self, *args, **kwargs):
         """Initialize a dataset object"""
         super().__init__(type="dataset", *args, **kwargs)
 
     @staticmethod
+
     def from_dataframe(
         data: pd.DataFrame,
         name: str,
@@ -32,6 +36,7 @@ class Dataset(Artifact):
         Returns:
             Dataste: created dataset
         """
+
         return Dataset(
             name=name,
             asset_path=asset_path,
@@ -55,3 +60,4 @@ class Dataset(Artifact):
 
     def __repr__(self) -> str:
         return self.name
+

@@ -1,10 +1,17 @@
 import unittest
 from sklearn.datasets import load_iris, fetch_openml
 import pandas as pd
+import os
+import sys
 
-from autoop.core.ml.dataset import Dataset
-from autoop.core.ml.feature import Feature
-from autoop.functional.feature import detect_feature_types
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+root_dir = os.path.dirname(parent_dir)
+sys.path.insert(0, root_dir)
+
+from autoop.core.ml.dataset import Dataset  # noqa : E402
+from autoop.core.ml.feature import Feature  # noqa : E402
+from autoop.functional.feature import detect_feature_types  # noqa : E402
 
 
 class TestFeatures(unittest.TestCase):
@@ -75,3 +82,7 @@ class TestFeatures(unittest.TestCase):
             lambda x: x.name in categorical_columns, features
         ):
             self.assertEqual(detected_feature.type, "categorical")
+
+
+if __name__ == "__main__":
+    unittest.main()
