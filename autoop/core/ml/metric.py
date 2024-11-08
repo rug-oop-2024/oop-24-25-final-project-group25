@@ -58,14 +58,30 @@ class Metric(ABC):
             actual: the actual ground truth.
 
         Returns:
-            float number representing our evaluated metric.
+            float: number representing our evaluated metric.
         """
         pass
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        Return the name of the metric.
+
+        Returns:
+            str: metric's name
+        """
         return self._name
 
     def __call__(self, predictions, actual) -> float:
+        """
+        Describe metric's behaviour as a callable: evaluate the given input.
+
+        Args:
+            predictions: predictions to evaluate
+            actual: actrual ground truth to evaluate by
+
+        Returns:
+            float: number representing our evaluated metric.
+        """
         return self.evaluate(predictions, actual)
 
 

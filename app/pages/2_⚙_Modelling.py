@@ -29,8 +29,8 @@ def write_helper_text(text: str):
 
 st.write("# ⚙ Modelling")
 write_helper_text(
-    ("In this section, you can design a machine learning pipeline to train" +
-        " a model on a dataset.")
+    "In this section, you can design a machine learning pipeline to train"
+    + " a model on a dataset."
 )
 
 automl = AutoMLSystem.get_instance()

@@ -4,6 +4,15 @@ from autoop.core.ml.model.regression.multiple_linear_regression import (
 )
 from autoop.core.ml.model.regression.lasso_regression import Lasso
 from autoop.core.ml.model.regression.ridge_regression import Ridge
+from autoop.core.ml.model.classification.decision_tree_calssifier import (
+    DecisionTreeClassifierModel
+)
+from autoop.core.ml.model.classification.knn_classifier import (
+    KNNClassifierModel
+)
+from autoop.core.ml.model.classification.random_forest_classifier import (
+    RandomForestClassifier
+)
 
 REGRESSION_MODELS = [
     "lasso regression",
@@ -11,7 +20,11 @@ REGRESSION_MODELS = [
     "ridge regression",
 ]
 
-CLASSIFICATION_MODELS = ["decision tree classifier"]
+CLASSIFICATION_MODELS = [
+    "decision tree classifier",
+    "k-nearest neighbors classifier",
+    "random forest classifier"
+    ]
 
 
 def get_model(model_name: str) -> Model:
@@ -31,7 +44,11 @@ def get_model(model_name: str) -> Model:
             return MultipleLinearRegression()
         case "ridge regression":
             return Ridge()
-        # case "decision tree classifier":
-        #     return DecisionTreeClassifierModel()
+        case "decision tree classifier":
+            return DecisionTreeClassifierModel()
+        case "k-nearest neighbors classifier":
+            return KNNClassifierModel()
+        case "random forest classifier":
+            return RandomForestClassifier()
         case _:
             raise KeyError("NO SUCH MODEL FOUND")

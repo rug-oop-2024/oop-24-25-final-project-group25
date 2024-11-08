@@ -19,8 +19,8 @@ def write_helper_text(text: str):
 
 st.write("# ? Deployment")
 write_helper_text(
-    ("In this section, you can quench the thirst of that little" +
-        " curious mind you have.")
+    "In this section, you can quench the thirst of that little"
+    + " curious mind you have."
 )
 
 with st.expander(label="What OS was used for this assignment?"):
