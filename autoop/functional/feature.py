@@ -23,7 +23,7 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
         features.append(Feature(name=name, type="numerical"))
 
     for name in dataframe.columns:
-        if not name in numericals_names:
+        if name not in numericals_names:
             features.append(Feature(name=name, type="categorical"))
 
     return features

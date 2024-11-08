@@ -5,7 +5,7 @@ from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
 
 st.set_page_config(page_title="Datasets", page_icon="📈")
-st.logo("app\images\logo.png", size="large")
+st.logo("app\\images\\logo.png", size="large")
 
 
 def write_helper_text(text: str):

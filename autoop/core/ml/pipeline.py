@@ -8,8 +8,6 @@ from autoop.core.ml.feature import Feature
 from autoop.core.ml.metric import Metric, get_metric
 from app.core.system import ArtifactRegistry
 from autoop.functional.preprocessing import preprocess_features
-import pickle
-import pandas as pd
 import numpy as np
 
 
@@ -39,7 +37,8 @@ class Pipeline:
         Initialize a Pipeline object.
 
         Args:
-            metrics(List[Metric]): list of metrics to be applies on the predictions
+            metrics(List[Metric]): list of metrics to be applies on the
+                predictions
             dataset(Dataset): dataset containing the data
             model(Model): the used machine learning model
             input_features(List[Feature]): list of features acting as input
@@ -56,9 +55,13 @@ class Pipeline:
         self._metrics = metrics
         self._artifacts = {}
         self._split = split
-        if target_feature.type == "categorical" and model.type != "classification":
+        if (
+            target_feature.type == "categorical" and
+            model.type != "classification"
+        ):
             raise ValueError(
-                "Model type must be classification for categorical target feature"
+                "Model type must be classification for categorical" +
+                " target feature"
             )
         if target_feature.type == "numerical" and model.type != "regression":
             raise ValueError(
@@ -96,7 +99,8 @@ Pipeline(
     @property
     def artifacts(self) -> List[Artifact]:
         """
-        Used to get the artifacts generated during the pipeline execution to be saved.
+        Used to get the artifacts generated during the pipeline execution to
+        be saved.
 
         Returns:
             List[Artifact]
@@ -137,12 +141,16 @@ Pipeline(
             [self._target_feature], self._dataset
         )[0]
         self._register_artifact(target_feature_name, artifact)
-        input_results = preprocess_features(self._input_features, self._dataset)
+        input_results = preprocess_features(
+            self._input_features, self._dataset
+        )
         for feature_name, data, artifact in input_results:
             self._register_artifact(feature_name, artifact)
-        # Get the input vectors and output vector, sort by feature name for consistency
+        # Get the input vectors and output vector, sort by feature name
         self._output_vector = target_data
-        self._input_vectors = [data for (feature_name, data, artifact) in input_results]
+        self._input_vectors = [
+            data for (feature_name, data, artifact) in input_results
+        ]
 
     def _split_data(self) -> None:
         """
@@ -152,13 +160,17 @@ Pipeline(
 
         split = self._split
         self._train_X = [
-            vector[: int(split * len(vector))] for vector in self._input_vectors
+            vector[:int(split * len(vector))] for vector in self._input_vectors
         ]
         self._test_X = [
-            vector[int(split * len(vector)) :] for vector in self._input_vectors
+            vector[int(split * len(vector)):] for vector in self._input_vectors
         ]
-        self._train_y = self._output_vector[: int(split * len(self._output_vector))]
-        self._test_y = self._output_vector[int(split * len(self._output_vector)) :]
+        self._train_y = self._output_vector[
+            :int(split * len(self._output_vector))
+        ]
+        self._test_y = self._output_vector[
+            int(split * len(self._output_vector)):
+        ]
 
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
         """
@@ -180,7 +192,11 @@ Pipeline(
         Y = self._train_y
         self._model.fit(X, Y)
 
-    def _evaluate(self, X: np.ndarray, Y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    def _evaluate(
+            self,
+            X: np.ndarray,
+            Y: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Evaluate the predictions compared to the actual ground truth based on
         the metrics.
@@ -300,7 +316,13 @@ Pipeline(
             )
         )
 
-    def to_artifact(self, name: str, id: str, path: str, version="1.0.0") -> Artifact:
+    def to_artifact(
+            self,
+            name: str,
+            id: str,
+            path: str,
+            version="1.0.0"
+    ) -> Artifact:
         """
         Turn the current pipeline into an artifact.
 
@@ -317,7 +339,9 @@ Pipeline(
             "metrics": [metric.name for metric in self._metrics],
             "dataset": self._dataset.id,
             "model": self._model.name,
-            "input_features": [feature.to_tuple() for feature in self._input_features],
+            "input_features": [
+                feature.to_tuple() for feature in self._input_features
+            ],
             "target_feature": self._target_feature.to_tuple(),
             "split": self._split,
         }
@@ -354,7 +378,8 @@ Pipeline(
             dataset=registry.get(data.get("dataset")),
             model=get_model(data.get("model")),
             input_features=[
-                Feature.from_tuple(feature) for feature in data.get("input_features")
+                Feature.from_tuple(feature) for
+                feature in data.get("input_features")
             ],
             target_feature=Feature.from_tuple(data.get("target_feature")),
             split=data.get("split"),

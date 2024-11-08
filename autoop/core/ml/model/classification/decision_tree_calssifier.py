@@ -1,4 +1,4 @@
-from sklearn.tree import DecisionTreeClassifier as SklearnDecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier as SkDecisionTreeClassifier
 
 
 class DecisionTreeClassifierModel:
@@ -6,7 +6,7 @@ class DecisionTreeClassifierModel:
     _type: str = "classification"
 
     def __init__(self, **kwargs):
-        self._model = SklearnDecisionTreeClassifier(**kwargs)
+        self._model = SkDecisionTreeClassifier(**kwargs)
         self._parameters = {}
 
     def fit(self, X, y):

@@ -1,12 +1,11 @@
 import streamlit as st
 from app.core.system import AutoMLSystem
-from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.pipeline import Pipeline
 from autoop.functional.feature import detect_feature_types
 
 
 st.set_page_config(page_title="Deployment", page_icon="📈")
-st.logo("app\images\logo.png", size="large")
+st.logo("app\\images\\logo.png", size="large")
 
 
 def write_helper_text(text: str):
@@ -14,7 +13,9 @@ def write_helper_text(text: str):
 
 
 st.write("# X Deployment")
-write_helper_text("In this section, you can deploy a saved machine learning pipeline.")
+write_helper_text(
+    "In this section, you can deploy a saved machine learning pipeline."
+)
 
 automl = AutoMLSystem.get_instance()
 
@@ -45,15 +46,19 @@ if selected_pipeline is not None:
             index=None,
             format_func=lambda artifact: artifact.name,
         )
-        if not dataset is None:
+        if dataset is not None:
 
             features = detect_feature_types(dataset)
             input_features = st.multiselect(
                 label="select input features", options=features
             )
 
-            if not input_features is None:
+            if input_features is not None:
                 if st.button(label="Run on new data"):
                     st.write(
-                        pipeline.predict_new_data(dataset, input_features, as_str=True)
+                        pipeline.predict_new_data(
+                            dataset,
+                            input_features,
+                            as_str=True
+                        )
                     )
