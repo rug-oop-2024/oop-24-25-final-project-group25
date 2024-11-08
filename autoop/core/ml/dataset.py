@@ -3,19 +3,12 @@ import pandas as pd
 
 
 class Dataset(Artifact):
-    """
-    Class representing a dataset.
-    """
-
-
-class Dataset(Artifact):
     """A class to represent an ML dataset"""
     def __init__(self, *args, **kwargs):
         """Initialize a dataset object"""
         super().__init__(type="dataset", *args, **kwargs)
 
     @staticmethod
-
     def from_dataframe(
         data: pd.DataFrame,
         name: str,
@@ -59,5 +52,10 @@ class Dataset(Artifact):
         return super().save(bytes)
 
     def __repr__(self) -> str:
-        return self.name
+        """
+        Return a string representation of the dataset.
 
+        Returns:
+            str: representation of the dataset
+        """
+        return self.name

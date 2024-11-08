@@ -9,6 +9,15 @@ st.logo("app\\images\\logo.png", size="large")
 
 
 def write_helper_text(text: str):
+    """
+    Writing the given text in a specific style.
+
+    Args:
+        text: text to write
+
+    Return:
+        None
+    """
     st.write(f'<p style="color: #888;">{text}</p>', unsafe_allow_html=True)
 
 

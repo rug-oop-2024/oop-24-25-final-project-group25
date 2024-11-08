@@ -14,6 +14,7 @@ CLASSIFICATION_MODELS = [
     "decision tree classifier"
 ]
 
+
 def get_model(model_name: str) -> Model:
     match model_name:
         case "lasso regression":

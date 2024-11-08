@@ -8,7 +8,16 @@ st.logo("app\\images\\logo.png", size="large")
 st.sidebar.success("Select a page above.")
 
 
-def write_helper_text(text: str):
+def write_helper_text(text: str) -> None:
+    """
+    Writing the given text in a specific style.
+
+    Args:
+        text: text to write
+
+    Return:
+        None
+    """
     st.write(f'<p style="color: #888;">{text}</p>', unsafe_allow_html=True)
 
 
