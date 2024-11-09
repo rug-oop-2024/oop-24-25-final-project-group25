@@ -21,7 +21,7 @@ def write_helper_text(text: str):
     st.write(f'<p style="color: #888;">{text}</p>', unsafe_allow_html=True)
 
 
-st.write("# X Deployment")
+st.write("📊 Datasets")
 write_helper_text("In this section, you can add, delete, and view datasets.")
 
 automl = AutoMLSystem.get_instance()
@@ -29,7 +29,9 @@ automl = AutoMLSystem.get_instance()
 datasets = automl.registry.list(type="dataset")
 
 # select one of the available tabs
-manage_datasets, view_datasets = st.tabs(["Manage Datasets", "View Datasets"])
+manage_datasets, view_datasets = st.tabs(
+    ["Manage Datasets", "View and Edit Datasets"]
+)
 
 with manage_datasets:
     # add or delete a dataset
@@ -54,21 +56,27 @@ with manage_datasets:
 
             new_dataframe = pd.read_csv(new_csv)
 
-            name_dataframe = st.text_input(label="The name of your dataframe")
+            name_dataframe = st.text_input(
+                label="The name of your dataframe",
+                value=None
+            )
 
             if st.button(label="Submit csv"):
-                automl.registry.register(
-                    Dataset.from_dataframe(
-                        new_dataframe,
-                        name_dataframe,
-                        name_dataframe + ".csv",
-                        id=str(len(datasets)),
+                if name_dataframe is None:
+                    st.write("Enter name!")
+                else:
+                    automl.registry.register(
+                        Dataset.from_dataframe(
+                            new_dataframe,
+                            name_dataframe,
+                            name_dataframe + ".csv",
+                            id=str(len(datasets)),
+                        )
                     )
-                )
-                st.write("File submitted!")
-                disable_uploader = False
-                new_csv = None
-                st.rerun()
+                    st.write("File submitted!")
+                    disable_uploader = False
+                    new_csv = None
+                    st.rerun()
 
     elif action == "Delete dataset":
         # delete a dataset
@@ -95,4 +103,28 @@ with view_datasets:
     )
 
     if selection is not None:
-        st.dataframe(selection.read())
+        new_data = st.data_editor(selection.read())
+        if new_data is not None:
+            name_dataset = st.text_input(
+                label="Name of your edited dataset",
+                value=None
+            )
+
+            if st.button(label="Save edited dataset"):
+                if name_dataset is None:
+                    st.write("Enter name!")
+                else:
+                    automl.registry.register(
+                        Dataset.from_dataframe(
+                            new_data,
+                            name_dataset,
+                            name_dataset + ".csv",
+                            id=str(len(datasets)),
+                        )
+                    )
+                    st.write("Saved!")
+                    disable_uploader = False
+                    new_csv = None
+                    st.rerun()
+
+        # st.dataframe(selection.read())

@@ -27,3 +27,6 @@ with st.expander(label="What OS was used for this assignment?"):
 
 with st.expander(label="Can I statistics?"):
     st.write("We all have that question.")
+
+with st.expander(label="Does your code have an HTML documentation?"):
+    st.write("Quite so, in the 'docs' foder")
