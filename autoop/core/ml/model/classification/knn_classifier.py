@@ -18,7 +18,7 @@ class KNNClassifierModel(Model):
 
     def __init__(self) -> None:
         """Initialize an instance of the KNNClassifierModel class."""
-        self._model = KNeighborsClassifier()
+        self._model = KNeighborsClassifier(n_neighbors=3)
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
@@ -31,6 +31,7 @@ class KNNClassifierModel(Model):
         Returns:
             None
         """
+
         self._model.fit(observations, ground_truth)
 
     def predict(self, observations: np.ndarray) -> np.ndarray:

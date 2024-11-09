@@ -3,7 +3,8 @@ import pickle
 
 from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.dataset import Dataset
-from autoop.core.ml.model import Model, get_model
+from autoop.core.ml.model.model import Model
+from autoop.core.ml.model.get_model import get_model
 from autoop.core.ml.feature import Feature
 from autoop.core.ml.metric import Metric, get_metric
 from app.core.system import ArtifactRegistry
@@ -369,16 +370,15 @@ Pipeline(
             Pipeline
         """
         data = pickle.loads(artifact.data)
-        print(data)
 
         return cls(
             metrics=[get_metric(metric) for metric in data.get("metrics")],
             dataset=registry.get(data.get("dataset")),
             model=get_model(data.get("model")),
-            input_features=[
+            input_ftrs=[
                 Feature.from_tuple(feature) for
                 feature in data.get("input_features")
             ],
-            target_feature=Feature.from_tuple(data.get("target_feature")),
+            target_ftr=Feature.from_tuple(data.get("target_feature")),
             split=data.get("split"),
         )

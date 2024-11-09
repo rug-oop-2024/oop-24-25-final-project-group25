@@ -1,8 +1,9 @@
 from sklearn.tree import DecisionTreeClassifier as SkDecisionTreeClassifier
+from autoop.core.ml.model.model import Model
 import numpy as np
 
 
-class DecisionTreeClassifierModel:
+class DecisionTreeClassifierModel(Model):
     """
     Facade class for the sklean Lasso model.
 

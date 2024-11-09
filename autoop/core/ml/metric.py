@@ -144,10 +144,8 @@ class Accuracy(Metric):
         """
         n = len(predictions)
         sum = 0
-
         for i in range(n):
-            sum += int(predictions[i] == actual[i])
-
+            sum += int(all(predictions[i] == actual[i]))
         return sum / n
 
 
@@ -176,18 +174,21 @@ class PrecisionMacro(Metric):
             float number representing our evaluated metric.
         """
 
-        categories = np.unique(actual)
+        categories = np.unique(actual, axis=0)
         macro_sum = 0
         for category in categories:
             TP = 0
             FP = 0
             for i in range(len(predictions)):
-                if category == predictions[i]:
-                    if predictions[i] == actual[i]:
+                if all(category == predictions[i]):
+                    if all(predictions[i] == actual[i]):
                         TP += 1
                     else:
                         FP += 1
-            macro_sum += TP / (TP + FP)
+            if TP == 0:
+                macro_sum += 0
+            else:
+                macro_sum += TP / (TP + FP)
 
         return macro_sum / len(categories)
 
@@ -217,20 +218,23 @@ class RecallMacro(Metric):
             float number representing our evaluated metric.
         """
 
-        categories = np.unique(actual)
+        categories = np.unique(actual, axis=0)
         macro_sum = 0
         for category in categories:
             TP = 0
             FN = 0
             for i in range(len(predictions)):
-                if category == predictions[i]:
-                    if predictions[i] == actual[i]:
+                if all(category == predictions[i]):
+                    if all(predictions[i] == actual[i]):
                         TP += 1
                 else:
-                    if predictions[i] != actual[i]:
+                    if not all(predictions[i] == actual[i]):
                         FN += 1
 
-            macro_sum += TP / (TP + FN)
+            if TP == 0:
+                macro_sum += 0
+            else:
+                macro_sum += TP / (TP + FN)
 
         return macro_sum / len(categories)
 

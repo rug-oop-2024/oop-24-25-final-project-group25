@@ -11,7 +11,7 @@ from autoop.core.ml.model.classification.knn_classifier import (
     KNNClassifierModel
 )
 from autoop.core.ml.model.classification.random_forest_classifier import (
-    RandomForestClassifier
+    RandomForestClassifierModel
 )
 
 REGRESSION_MODELS = [
@@ -49,6 +49,6 @@ def get_model(model_name: str) -> Model:
         case "k-nearest neighbors classifier":
             return KNNClassifierModel()
         case "random forest classifier":
-            return RandomForestClassifier()
+            return RandomForestClassifierModel()
         case _:
             raise KeyError("NO SUCH MODEL FOUND")
