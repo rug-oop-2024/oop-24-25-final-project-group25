@@ -263,14 +263,14 @@ Pipeline(
         results_string += "Train metrics:\n"
 
         for metric in results["train_metrics"]:
-            results_string += f"{metric[0]}: {metric[1]}\n"
+            results_string += f"{metric[0]}: {metric[1]},\n"
 
         train_pred = results["train_predictions"]
         results_string += f"\nTrain predictions:\n{train_pred}\n\n"
         results_string += "Test metrics:\n"
 
         for metric in results["test_metrics"]:
-            results_string += f"{metric[0]}: {metric[1]}\n"
+            results_string += f"{metric[0]}: {metric[1]},\n"
 
         test_pred = results["test_predictions"]
         results_string += f"\nTest predictions:\n{test_pred}"
