@@ -80,7 +80,7 @@ class Model(ABC):
         Predict ground truth for the observations based on the model's
         parameters.
 
-        Args;
+        Args:
             observations: observations on which to conduct the prediction
 
         Returns:
