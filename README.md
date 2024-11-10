@@ -155,20 +155,20 @@ If you did not implement the feature
 |-------------------------------------- |--------------|----------------------|--------------------------|---------|         
 | Up-to-date requirements.txt           | NF           |        Both          |    X     | |
 | `ML/detect-features`                  | FN           |        Matei         |    X     | |
-| `ML/artifact`                         | NF           |        Matei         |    X     | |
+| `ML/artifact`                         | NF           |        Both          |    X     | |
 | `ML/feature`                          | NF           |        Matei         |    X     | |
-| `ML/metric`                           | NF           |        Matei         |    X     | |
+| `ML/metric`                           | NF           |        Both          |    X     | |
 | `ML/metric/extensions`                | FN           |        Matei         |    X     | |
 | `ML/model`                            | NF           |        Alin          |    X     | |
 | `ML/model/extensions`                 | FN           |        Both          |    X     | |
 | `ML/pipeline/evaluation`              | FN           |        Alin          |    X     | | 
 | `ST/page/datasets`                    | NF           |        Matei         |    X     | |
 | `ST/datasets/management/create`       | FN           |        Matei         |    X     | |
-| `ST/datasets/management/save`         | FN           |        Matei         |    X     | |
+| `ST/datasets/management/save`         | FN           |        Both          |    X     | |
 | `ST/page/modelling`                   | NF           |        Matei         |    X     | |
 | `ST/modelling/datasets/list`          | FN           |        Both          |    X     | |
 | `ST/modelling/datasets/features`      | FN           |        Matei         |    X     | |
-| `ST/modelling/models`                 | FN           |        Matei         |    X     | |
+| `ST/modelling/models`                 | FN           |        Both          |    X     | |
 | `ST/modelling/pipeline/split`         | FN           |        Matei         |    X     | |
 | `ST/modelling/pipeline/metrics`       | FN           |        Both          |    X     | |
 | `ST/modelling/pipeline/summary`       | FN           |        Matei         |    X     | |
@@ -181,4 +181,4 @@ If you did not implement the feature
 If you add extra features, please indicate them below:
 | Requirement                           | Type (FN/NF) | Implemented by       | Implementation Completed (add X if done) | Comment |
 |-------------------------------------- |--------------|----------------------|---------|-----|
-|           |            |                      |         | |
+|   HTML Documentation                  |     NF       |         Both         |    X    | |
