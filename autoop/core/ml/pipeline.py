@@ -296,8 +296,8 @@ Pipeline(
             metrics=self._metrics,
             dataset=dataset,
             model=self._model,
-            input_features=input_features,
-            target_feature=self._target_feature,
+            input_ftrs=input_features,
+            target_ftr=self._target_feature,
             split=0,
         )
         new_pipeline._preprocess_features()
