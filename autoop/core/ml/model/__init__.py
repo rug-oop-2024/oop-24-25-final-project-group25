@@ -1,13 +1,19 @@
+"""
+Package containing classification and regression models
+and tools for their handling.
 
-from autoop.core.ml.model.model import Model
-from autoop.core.ml.model.regression import MultipleLinearRegression
+Subpackages:
+    - classification: package for classification machine learning models
+    - regression: package for regression machine learning models
 
-REGRESSION_MODELS = [
-] # add your models as str here
-
-CLASSIFICATION_MODELS = [
-] # add your models as str here
-
-def get_model(model_name: str) -> Model:
-    """Factory function to get a model by name."""
-    raise NotImplementedError("To be implemented.")
+Modules:
+    - get_model: allows to get a ML model by its name
+    - model: defines abstract Model class that stands at the base of the other
+        ML models
+"""
+__all__ = [
+    "classification",
+    "regression",
+    "get_model",
+    "model"
+]
